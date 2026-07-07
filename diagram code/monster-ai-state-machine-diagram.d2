@@ -1,0 +1,52 @@
+classes: {
+  state: {
+    shape: rectangle
+    style.fill: "#ffffff"
+    style.stroke: "#5b7fd1"
+    style.stroke-width: 2
+    style.border-radius: 6
+    style.font-size: 15
+    style.bold: true
+  }
+  transition: {
+    style.stroke: "#4a6fdc"
+    style.stroke-width: 2
+    style.font-color: "#6f6f6f"
+    style.italic: true
+    style.font-size: 12
+  }
+}
+
+monster_ai: "Monster AI State Machine" {
+  style.fill: "#eef2fb"
+  style.stroke: "#a7b6de"
+  style.stroke-width: 2
+  style.border-radius: 10
+  style.font-size: 18
+  style.bold: true
+
+  SPAWN: "SPAWN\nidle" { class: state }
+  PAIN: "PAIN" { class: state }
+  SEE: "SEE\nchase" { class: state }
+  ATTACK: "ATTACK\nmelee / missile" { class: state }
+  DEATH: "DEATH" { class: state }
+  RAISE: "RAISE\noptional" { class: state }
+
+  SPAWN -> SEE: "A_Look(): hears noise or sees player\n(LookForPlayers) -> SetState(SeeState)" { class: transition }
+  SPAWN -> PAIN: "takes damage (pain chance gated)" { class: transition }
+  SPAWN -> DEATH: "health <= 0" { class: transition }
+
+  PAIN -> SEE: "(recovers)" { class: transition }
+
+  SEE -> SEE: "A_Chase() each tic: NewChaseDir();\nmove toward target;\nre-acquire target if lost" { class: transition }
+  SEE -> PAIN: "takes damage (pain chance gated)" { class: transition }
+  SEE -> DEATH: "health <= 0" { class: transition }
+  SEE -> ATTACK: "in attack range\n(CheckMissileRange / CheckMeleeRange)" { class: transition }
+
+  ATTACK -> PAIN: "takes damage (pain chance gated)" { class: transition }
+  ATTACK -> SEE: "missile fired or melee swing\n-> back to chase" { class: transition }
+  ATTACK -> DEATH: "health <= 0" { class: transition }
+
+  DEATH -> RAISE: "Archvile's own AI (P_CheckForResurrection) finds this\ncorpse via blockmap search and forces its state --\nthis is not a transition the corpse initiates itself" { class: transition }
+  RAISE -> SEE: "resurrection complete" { class: transition }
+}

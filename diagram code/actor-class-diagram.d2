@@ -1,0 +1,239 @@
+# AActor gameplay entity - class diagram
+# GZDoom engine, playsim module
+
+direction: right
+
+classes: {
+  entity: {
+    shape: sql_table
+    style.fill: "#1b2a4a"
+    style.font-color: "#ffffff"
+    style.stroke: "#0d1b33"
+    style.border-radius: 4
+  }
+}
+
+DVector3: {
+  class: entity
+  label: "DVector3 · «value type» · vectors.h"
+  X: double
+  Y: double
+  Z: double
+  "Length()": double
+  "XY()": DVector2
+}
+
+DRotator: {
+  class: entity
+  label: "DRotator · «value type» · vectors.h"
+  Pitch: DAngle
+  Yaw: DAngle
+  Roll: DAngle
+}
+
+AActor: {
+  class: entity
+  label: "AActor · «final» · actor.h"
+
+  "— Position & Movement —": ""
+  __Pos: DVector3
+  Vel: DVector3
+  Angles: DRotator
+  Speed: double
+  FloatSpeed: double
+  radius: double
+  Height: double
+  Floorclip: double
+
+  "— Collision & World Linkage —": ""
+  Sector: "sector_t*"
+  floorsector: "sector_t*"
+  ceilingsector: "sector_t*"
+  floorz: double
+  ceilingz: double
+  BlockNode: "FBlockNode*"
+  touching_sectorlist: "msecnode_t*"
+  BlockingMobj: "TObjPtr<AActor*>"
+  BlockingLine: "line_t*"
+
+  "— State Machine —": ""
+  state: "FState*"
+  tics: int
+  SpawnState: "FState*"
+  SeeState: "FState*"
+  MeleeState: "FState*"
+  MissileState: "FState*"
+
+  "— Health & Targeting —": ""
+  health: int
+  target: "TObjPtr<AActor*>"
+  lastenemy: "TObjPtr<AActor*>"
+  tracer: "TObjPtr<AActor*>"
+  master: "TObjPtr<AActor*>"
+
+  "— Identification & Behavior —": ""
+  tid: int
+  special: int
+  args: "int[5]"
+  threshold: int
+  reactiontime: int
+  movedir: int
+  movecount: int
+
+  "— Flags —": ""
+  flags: ActorFlags
+  flags2: ActorFlags2
+  flags3: ActorFlags3
+  flags4: ActorFlags4
+  "flags5..9": "ActorFlags5-9"
+
+  "— Rendering —": ""
+  sprite: int
+  frame: uint8_t
+  Alpha: double
+  Scale: DVector2
+  RenderStyle: FRenderStyle
+  renderflags: uint32_t
+  renderflags2: uint32_t
+
+  "— Inventory —": ""
+  Inventory: "TObjPtr<AActor*>"
+  InventoryID: uint32_t
+
+  "— Player Link —": ""
+  player: "player_t*"
+
+  "— Sounds —": ""
+  SeeSound: FSoundID
+  AttackSound: FSoundID
+  PainSound: FSoundID
+  DeathSound: FSoundID
+}
+
+FState: {
+  class: entity
+  label: "FState · «external» · gamedata/info.h"
+  NextState: "FState*"
+  ActionFunc: "VMFunction*"
+  sprite: int32_t
+  Frame: uint8_t
+  Tics: int16_t
+  TicRange: uint16_t
+  StateFlags: uint16_t
+}
+
+VMFunction: {
+  class: entity
+  label: "VMFunction · «external» · vm.h"
+  note: "bytecode or native function pointer"
+}
+
+sector_t: {
+  class: entity
+  label: "sector_t · «external» · r_defs.h"
+  floorheight: double
+  ceilingheight: double
+  lightlevel: int
+  PortalGroup: int
+  tag: int
+}
+
+line_t: {
+  class: entity
+  label: "line_t · «external» · r_defs.h"
+  special: int
+  args: "int[5]"
+  v1: "vertex_t*"
+  v2: "vertex_t*"
+  frontsector: "sector_t*"
+  backsector: "sector_t*"
+}
+
+player_t: {
+  class: entity
+  label: "player_t · d_player.h"
+  mo: "AActor*"
+  cmd: usercmd_t
+  original_cmd: usercmd_t
+  viewz: double
+  viewheight: double
+  FOV: float
+  DesiredFOV: float
+  bob: double
+  ReadyWeapon: "AActor*"
+  PendingWeapon: "AActor*"
+  psprites: "TObjPtr<DPSprite*>"
+  health: int
+  cheats: int
+  killcount: int
+  itemcount: int
+  damagecount: uint32_t
+  bonuscount: uint32_t
+  camera: "TObjPtr<AActor*>"
+  attacker: "TObjPtr<AActor*>"
+  Bot: "TObjPtr<DBot*>"
+  crouching: int
+  crouchfactor: double
+  morphTics: int
+  weapons: FWeaponSlots
+}
+
+usercmd_t: {
+  class: entity
+  label: "usercmd_t · «external» · d_protocol.h"
+  buttons: uint32_t
+  pitch: short
+  yaw: short
+  roll: short
+  forwardmove: short
+  sidemove: short
+  upmove: short
+}
+
+DPSprite: {
+  class: entity
+  label: "DPSprite · p_pspr.h"
+  Owner: "player_t*"
+  State: "FState*"
+  Next: "TObjPtr<DPSprite*>"
+  Caller: "TObjPtr<AActor*>"
+  x: double
+  y: double
+  alpha: double
+  ID: int
+}
+
+InventoryItem: {
+  class: entity
+  label: "InventoryItem · actor.h (AActor inventory role)"
+  Inventory: "TObjPtr<AActor*>"
+  Owner: "AActor*"
+  InventoryID: uint32_t
+}
+
+ActorFlags: {
+  class: entity
+  label: "ActorFlags · «bitfield group» · actor.h"
+  flags: "string (MF_SOLID, MF_SHOOTABLE, MF_MISSILE, MF_COUNTKILL)"
+  flags2: "string (MF2_FLOORBOUNCE, MF2_PASSMOBJ)"
+  flags3: "string (MF3_AVOIDMELEE)"
+  flags4: "string (MF4_FORCERADIUSDMG)"
+  flags5_9: "string (extended sets)"
+}
+
+# Associations
+
+AActor -> DVector3: "__Pos, Vel (owns)"
+AActor -> DRotator: "Angles (owns)"
+AActor -> FState: "state / SpawnState / SeeState / MeleeState / MissileState"
+AActor -> sector_t: "Sector / floorsector / ceilingsector"
+AActor -> line_t: "BlockingLine 0..1"
+FState -> FState: "NextState 0..1"
+FState -> VMFunction: "ActionFunc 0..1"
+AActor -> player_t: "player 0..1, null if not a player"
+player_t -> AActor: "mo 1 (back-reference)"
+player_t -> usercmd_t: "cmd (owns)"
+player_t -> DPSprite: "psprites 0..*"
+AActor -> InventoryItem: "Inventory 0..* (linked list)"
+AActor -> ActorFlags: "flags..flags9 (owns 9 bitfields)"
+AActor -> AActor: "target 0..1 / tracer 0..1 / master 0..1 / lastenemy 0..1"

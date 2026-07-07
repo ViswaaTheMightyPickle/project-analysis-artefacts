@@ -1,0 +1,114 @@
+shape: sequence_diagram
+
+title: {
+  label: Player Movement Sequence
+  shape: text
+  style.font-size: 28
+  style.bold: true
+  style.font-color: "#1b3a5c"
+}
+
+Ticker: {
+  style.fill: "#dce8f7"
+  style.stroke: "#1b3a5c"
+  style.font-color: "#0d1b2a"
+}
+P_PlayerThink: {
+  style.fill: "#dce8f7"
+  style.stroke: "#1b3a5c"
+  style.font-color: "#0d1b2a"
+}
+PlayerPawnThink: {
+  style.fill: "#dce8f7"
+  style.stroke: "#1b3a5c"
+  style.font-color: "#0d1b2a"
+}
+P_XYMovement: {
+  style.fill: "#dce8f7"
+  style.stroke: "#1b3a5c"
+  style.font-color: "#0d1b2a"
+}
+P_TryMove: {
+  style.fill: "#dce8f7"
+  style.stroke: "#1b3a5c"
+  style.font-color: "#0d1b2a"
+}
+P_CheckPosition: {
+  style.fill: "#dce8f7"
+  style.stroke: "#1b3a5c"
+  style.font-color: "#0d1b2a"
+}
+BlockmapIterator: {
+  style.fill: "#dce8f7"
+  style.stroke: "#1b3a5c"
+  style.font-color: "#0d1b2a"
+}
+P_SlideMove: {
+  style.fill: "#dce8f7"
+  style.stroke: "#1b3a5c"
+  style.font-color: "#0d1b2a"
+}
+
+Ticker -> P_PlayerThink: "P_PlayerThink(player)" {
+  style.stroke: "#1b3a5c"
+}
+
+P_PlayerThink -> P_PlayerThink: "cmd = &player->cmd (reads usercmd_t: forwardmove, sidemove, upmove, pitch, yaw, buttons)" {
+  style.stroke: "#1b3a5c"
+}
+
+P_PlayerThink -> PlayerPawnThink: "IFVIRTUALPTRNAME(player->mo, NAME_PlayerPawn, PlayerThink) -> VMCall(func, player->mo)" {
+  style.stroke: "#1b3a5c"
+}
+
+PlayerPawnThink -> P_XYMovement: "ZScript PlayerThink applies cmd.forwardmove/sidemove to velocity; native P_XYMovement integrates position" {
+  style.stroke: "#1b3a5c"
+}
+
+P_XYMovement -> P_TryMove: "P_TryMove(mo, newpos, dropoff, ...)" {
+  style.stroke: "#1b3a5c"
+}
+
+P_TryMove -> P_CheckPosition: "P_CheckPosition(thing, pos, tm)" {
+  style.stroke: "#1b3a5c"
+}
+
+P_CheckPosition -> BlockmapIterator: "BlockThingsIterator / PIT_CheckThing (iterate blockmap cells at new pos)" {
+  style.stroke: "#1b3a5c"
+}
+
+BlockmapIterator -> P_CheckPosition: "collision list / open range" {
+  style.stroke: "#2f6690"
+}
+
+P_CheckPosition -> P_TryMove: "return ok / blocked" {
+  style.stroke: "#2f6690"
+}
+
+P_TryMove -> P_XYMovement: "ok -> commit: SetOrigin(newpos), update sector links" {
+  style.stroke: "#2f6690"
+}
+
+P_XYMovement -> P_SlideMove: "if blocked && (flags2 & (MF2_SLIDE|MF2_BLASTED)) && !(flags & MF_MISSILE): P_SlideMove(mo, pos, numsteps)" {
+  style.stroke: "#1b3a5c"
+}
+
+P_SlideMove -> P_SlideMove: "FindBestSlideLine(); decompose velocity along wall normal; retry P_TryMove with clipped velocity" {
+  style.stroke: "#1b3a5c"
+}
+
+P_SlideMove -> P_XYMovement: "(return - partial move or full stop)" {
+  style.stroke: "#2f6690"
+}
+
+P_XYMovement -> PlayerPawnThink: "(return)" {
+  style.stroke: "#2f6690"
+}
+
+PlayerPawnThink -> P_PlayerThink: "(return)" {
+  style.stroke: "#2f6690"
+}
+
+P_PlayerThink -> Ticker: "(return)" {
+  style.stroke: "#2f6690"
+}

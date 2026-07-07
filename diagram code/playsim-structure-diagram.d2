@@ -1,0 +1,275 @@
+# Module structure of GZDoom's src/playsim/ directory:
+# functional groupings of source files and the dependency
+# relationships between those groups.
+
+classes: {
+  file: {
+    shape: rectangle
+    style: {
+      fill: "#ffffff"
+      stroke: "#b0c4de"
+      font-size: 12
+      border-radius: 3
+    }
+  }
+  folder: {
+    shape: package
+    style: {
+      fill: "#eef4ff"
+      stroke: "#7fa8d9"
+      font-size: 12
+    }
+  }
+  base-edge: {
+    style: {
+      stroke: "#2b6cb0"
+      stroke-width: 2
+      font-size: 11
+      italic: true
+    }
+  }
+  calls-edge: {
+    style: {
+      stroke: "#718096"
+      font-size: 11
+      italic: true
+    }
+  }
+  depend-edge: {
+    style: {
+      stroke: "#98a5b3"
+      font-size: 11
+      italic: true
+    }
+  }
+  note-edge: {
+    style: {
+      stroke: "#98a5b3"
+      stroke-dash: 4
+      font-size: 11
+      italic: true
+    }
+  }
+}
+
+gzdoom: "GZDoom (single build target)" {
+  style: {
+    fill: "#f3f8fd"
+    stroke: "#a9c6e8"
+    font-size: 20
+    border-radius: 6
+  }
+
+  playsim: "src/playsim/" {
+    style: {
+      fill: "#dfebf9"
+      stroke: "#8fb4dd"
+      font-size: 17
+      border-radius: 6
+    }
+
+    effects_visuals: "Effects & Visuals" {
+      style: {
+        fill: "#eaf2fb"
+        stroke: "#7fa8d9"
+        font-size: 14
+        border-radius: 5
+      }
+      "p_visualthinker.h".class: file
+      "a_morph.h".class: file
+      "p_effect.h".class: file
+      "a_dynlight.h".class: file
+      "a_dynlight.cpp".class: file
+      "a_sharedglobal.h".class: file
+      "a_decals.cpp".class: file
+      "a_specialspot.h".class: file
+    }
+
+    mapthinkers: "mapthinkers/ — Sector Effect Thinkers" {
+      style: {
+        fill: "#eaf2fb"
+        stroke: "#7fa8d9"
+        font-size: 14
+        border-radius: 5
+      }
+      "a_plats.h".class: file
+      "a_lights.h".class: file
+      "a_lightning.h".class: file
+      "a_doors.h".class: file
+      "a_pusher.h".class: file
+      "a_ceiling.h".class: file
+      "a_pillar.h".class: file
+      "a_scroll.h".class: file
+      "a_floor.h".class: file
+      "dsectoreffect.h".class: file
+      "a_decalfx.h".class: file
+      "a_decalfx.cpp".class: file
+      "a_lighttransfer.h".class: file
+      "a_lighttransfer.cpp".class: file
+      "a_quake.cpp".class: file
+      "a_thruster.cpp".class: file
+      "p_spec_thinkers.h".class: file
+    }
+
+    bots: "bots/ — Bot AI" {
+      style: {
+        fill: "#eaf2fb"
+        stroke: "#7fa8d9"
+        font-size: 14
+        border-radius: 5
+      }
+      "b_bot.h".class: file
+      "b_bot.cpp".class: file
+      "b_func.cpp".class: file
+      "b_game.cpp".class: file
+      "b_move.cpp".class: file
+      "b_think.cpp".class: file
+    }
+
+    core: "Core Entity Layer" {
+      style: {
+        fill: "#eaf2fb"
+        stroke: "#7fa8d9"
+        font-size: 14
+        border-radius: 5
+      }
+      "dthinker.h".class: file
+      "dthinker.cpp".class: file
+      "statnums.h".class: file
+      "actor.h".class: file
+      "d_player.h".class: file
+    }
+
+    scripting: "Scripting Systems" {
+      style: {
+        fill: "#eaf2fb"
+        stroke: "#7fa8d9"
+        font-size: 14
+        border-radius: 5
+      }
+      "fragglescript/".class: folder
+      "p_acs.h".class: file
+      "p_acs.cpp".class: file
+    }
+
+    map_mechanics: "Map Mechanics" {
+      style: {
+        fill: "#eaf2fb"
+        stroke: "#7fa8d9"
+        font-size: 14
+        border-radius: 5
+      }
+      "p_spec.h".class: file
+      "p_spec.cpp".class: file
+      "p_lnspec.h".class: file
+      "actionspecials.h".class: file
+      "p_teleport.cpp".class: file
+      "p_tags.h".class: file
+      "p_linkedsectors.cpp".class: file
+      "p_destructible.h".class: file
+      "p_things.cpp".class: file
+    }
+
+    ai_combat: "AI & Combat" {
+      style: {
+        fill: "#eaf2fb"
+        stroke: "#7fa8d9"
+        font-size: 14
+        border-radius: 5
+      }
+      "p_enemy.h".class: file
+      "p_enemy.cpp".class: file
+      "p_interaction.cpp".class: file
+    }
+
+    physics: "Physics & Collision" {
+      style: {
+        fill: "#eaf2fb"
+        stroke: "#7fa8d9"
+        font-size: 14
+        border-radius: 5
+      }
+      "p_local.h".class: file
+      "p_sight.cpp".class: file
+      "p_map.cpp".class: file
+      "p_mobj.cpp".class: file
+      "p_checkposition.h".class: file
+      "p_linetracedata.h".class: file
+      "p_maputl.h".class: file
+      "actorinlines.h".class: file
+    }
+
+    player_weapons: "Player & Weapons" {
+      style: {
+        fill: "#eaf2fb"
+        stroke: "#7fa8d9"
+        font-size: 14
+        border-radius: 5
+      }
+      "p_pspr.h".class: file
+      "p_pspr.cpp".class: file
+      "p_user.cpp".class: file
+    }
+
+    map3d: "3D / Non-Euclidean Map Features" {
+      style: {
+        fill: "#eaf2fb"
+        stroke: "#7fa8d9"
+        font-size: 14
+        border-radius: 5
+      }
+      "p_3dfloors.h".class: file
+      "portal.h".class: file
+      "p_3dmidtex.h".class: file
+      "po_man.h".class: file
+      "po_man.cpp".class: file
+    }
+
+    trace: "p_trace.h / p_trace.cpp" {
+      style: {
+        fill: "#eaf2fb"
+        stroke: "#7fa8d9"
+        font-size: 13
+        border-radius: 5
+      }
+      "p_trace.h".class: file
+      "p_trace.cpp".class: file
+    }
+
+    actor_note: "core dependency — direct #include in a specific subset of playsim files; pervasive transitively through d_player.h and p_local.h" {
+      shape: text
+      style: {
+        font-size: 12
+        italic: true
+        font-color: "#5a6472"
+      }
+    }
+  }
+}
+
+# Base-class relationships
+gzdoom.playsim.core."dthinker.h" -> gzdoom.playsim.bots."b_bot.h": "base class for" {class: base-edge}
+gzdoom.playsim.core."dthinker.h" -> gzdoom.playsim.core."actor.h": "base class for" {class: base-edge}
+gzdoom.playsim.core."dthinker.h" -> gzdoom.playsim.mapthinkers."dsectoreffect.h": "base class for" {class: base-edge}
+gzdoom.playsim.core."dthinker.h" -> gzdoom.playsim.scripting."p_acs.h": "base class for" {class: base-edge}
+
+# actor.h dependents
+gzdoom.playsim.core."actor.h" -> gzdoom.playsim.ai_combat."p_enemy.h": "depended on by" {class: depend-edge}
+gzdoom.playsim.core."actor.h" -> gzdoom.playsim.scripting."p_acs.h": "depended on by" {class: depend-edge}
+gzdoom.playsim.core."actor.h" -> gzdoom.playsim.ai_combat."p_interaction.cpp": "depended on by" {class: depend-edge}
+gzdoom.playsim.core."actor.h" -> gzdoom.playsim.physics."p_map.cpp": "depended on by" {class: depend-edge}
+gzdoom.playsim.core."actor.h" -> gzdoom.playsim.actor_note {class: note-edge}
+
+# Scripting calls
+gzdoom.playsim.scripting."p_acs.h" -> gzdoom.playsim.map_mechanics."p_spec.h": "calls" {class: calls-edge}
+gzdoom.playsim.scripting."p_acs.h" -> gzdoom.playsim.map_mechanics."p_things.cpp": "calls" {class: calls-edge}
+
+# AI & combat / physics calls
+gzdoom.playsim.ai_combat."p_enemy.h" -> gzdoom.playsim.ai_combat."p_interaction.cpp": "calls (melee)" {class: calls-edge}
+gzdoom.playsim.physics."p_local.h" -> gzdoom.playsim.physics."p_sight.cpp": "calls (movement)" {class: calls-edge}
+gzdoom.playsim.physics."p_map.cpp" -> gzdoom.playsim.physics."p_maputl.h": "calls" {class: calls-edge}
+
+# Trace utility calls
+gzdoom.playsim.trace -> gzdoom.playsim.map3d."p_3dfloors.h": "calls" {class: calls-edge}
+gzdoom.playsim.trace -> gzdoom.playsim.map3d."portal.h": "calls" {class: calls-edge}
+gzdoom.playsim.physics."p_maputl.h" -> gzdoom.playsim.trace: "calls" {class: calls-edge}

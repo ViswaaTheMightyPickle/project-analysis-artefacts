@@ -1,0 +1,173 @@
+title: {
+  label: "Playsim Logical Architecture"
+  near: top-center
+  shape: rectangle
+  style: {
+    font-size: 20
+    bold: true
+    stroke: "#2b6cb0"
+    fill: "#ffffff"
+    border-radius: 6
+  }
+}
+
+playsim: "playsim" {
+  style: {
+    fill: "#eaf2fb"
+    stroke: "#2b6cb0"
+    stroke-width: 2
+    border-radius: 10
+    font-size: 16
+    bold: true
+  }
+
+  thinker_scheduler: "Thinker Scheduler" {
+    shape: rectangle
+    style: {
+      fill: "#ffffff"
+      stroke: "#2b6cb0"
+      stroke-width: 2
+      border-radius: 6
+      font-size: 14
+    }
+  }
+
+  scripting: "Scripting" {
+    shape: rectangle
+    style: {
+      fill: "#ffffff"
+      stroke: "#2b6cb0"
+      stroke-width: 2
+      border-radius: 6
+      font-size: 14
+    }
+  }
+
+  actors_entities: "Actors & Entities" {
+    shape: rectangle
+    style: {
+      fill: "#ffffff"
+      stroke: "#2b6cb0"
+      stroke-width: 3
+      border-radius: 6
+      font-size: 15
+      bold: true
+    }
+  }
+
+  physics_collision: "Physics & Collision" {
+    shape: rectangle
+    style: {
+      fill: "#ffffff"
+      stroke: "#2b6cb0"
+      stroke-width: 2
+      border-radius: 6
+      font-size: 14
+    }
+  }
+
+  map_sectors_specials: "Map Sectors & Specials" {
+    shape: rectangle
+    style: {
+      fill: "#ffffff"
+      stroke: "#2b6cb0"
+      stroke-width: 2
+      border-radius: 6
+      font-size: 14
+    }
+  }
+
+  player_hud: "Player / HUD" {
+    shape: rectangle
+    style: {
+      fill: "#ffffff"
+      stroke: "#2b6cb0"
+      stroke-width: 2
+      border-radius: 6
+      font-size: 14
+    }
+  }
+
+  thinker_scheduler -> actors_entities: "«schedules Tick()»" {
+    style: {
+      stroke: "#2b6cb0"
+      font-color: "#555555"
+      italic: true
+      stroke-width: 2
+    }
+  }
+
+  scripting -> actors_entities: "spawns / modifies" {
+    style: {
+      stroke: "#2b6cb0"
+      font-color: "#555555"
+      italic: true
+      stroke-width: 2
+    }
+  }
+
+  scripting -> map_sectors_specials: "activates specials" {
+    style: {
+      stroke: "#2b6cb0"
+      font-color: "#555555"
+      italic: true
+      stroke-width: 2
+    }
+  }
+
+  actors_entities -> physics_collision: "movement / collision queries" {
+    style: {
+      stroke: "#2b6cb0"
+      font-color: "#555555"
+      italic: true
+      stroke-width: 2
+    }
+  }
+
+  map_sectors_specials -> actors_entities: "triggers specials / spatial constraint" {
+    style: {
+      stroke: "#2b6cb0"
+      font-color: "#555555"
+      italic: true
+      stroke-width: 2
+    }
+  }
+
+  map_sectors_specials -> player_hud: "visible state / feedback" {
+    style: {
+      stroke: "#2b6cb0"
+      font-color: "#555555"
+      italic: true
+      stroke-width: 2
+    }
+  }
+
+  player_hud -> actors_entities: "player commands" {
+    style: {
+      stroke: "#2b6cb0"
+      font-color: "#555555"
+      italic: true
+      stroke-width: 2
+    }
+  }
+
+  bot_ai: "Bot AI" {
+    shape: rectangle
+    style: {
+      fill: "#ffffff"
+      stroke: "#2b6cb0"
+      stroke-width: 2
+      border-radius: 6
+      font-size: 14
+    }
+  }
+
+  bot_ai -> player_hud: "synthesizes usercmd_t" {
+    style: {
+      stroke: "#2b6cb0"
+      font-color: "#555555"
+      italic: true
+      stroke-width: 2
+    }
+  }
+}

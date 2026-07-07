@@ -1,0 +1,678 @@
+vars: {
+  d2-config: {
+    layout-engine: elk
+  }
+}
+
+classes: {
+  uml-class: {
+    shape: sql_table
+    style.fill: "#1b2a41"
+    style.stroke: "#0d1b2a"
+    style.font-color: "#ffffff"
+    style.border-radius: 4
+  }
+  abstract-class: {
+    shape: sql_table
+    style.fill: "#3c5a78"
+    style.stroke: "#0d1b2a"
+    style.font-color: "#ffffff"
+    style.border-radius: 4
+  }
+  external-class: {
+    shape: sql_table
+    style.fill: "#6b7b8c"
+    style.stroke: "#4a4a4a"
+    style.font-color: "#ffffff"
+    style.border-radius: 4
+  }
+  group-container: {
+    style.fill: "#eaf3fb"
+    style.stroke: "#3b6ea5"
+    style.stroke-width: 2
+    style.font-color: "#1b3a5c"
+    style.border-radius: 8
+  }
+  sub-container: {
+    style.fill: "#d7e9f7"
+    style.stroke: "#3b6ea5"
+    style.stroke-width: 2
+    style.font-color: "#1b3a5c"
+    style.border-radius: 8
+  }
+  extends-edge: {
+    style.stroke: "#2c3e50"
+    style.stroke-width: 2
+    target-arrowhead.shape: triangle
+    target-arrowhead.style.filled: false
+  }
+  assoc-edge: {
+    style.stroke: "#8a97a5"
+    style.stroke-width: 1
+    style.stroke-dash: 4
+    source-arrowhead.shape: diamond
+    source-arrowhead.style.filled: false
+    target-arrowhead.shape: arrow
+  }
+}
+
+title: "GZDoom Playsim -- DThinker Class Hierarchy" {
+  shape: text
+  near: top-center
+  style.font-size: 22
+  style.bold: true
+}
+
+# dthinker.h
+DThinker: "DThinker <<abstract>>" {
+  class: abstract-class
+  _statNum: "int8_t"
+  NextThinker: "DThinker*"
+  PrevThinker: "DThinker*"
+  Level: "FLevelLocals*"
+  "Tick()": "void"
+  "PostBeginPlay()": "void"
+  "Serialize()": "void"
+  "ChangeStatNum(int)": "void"
+  "GetStatNum()": "int"
+}
+
+Scripting: {
+  label: "Scripting"
+  class: group-container
+
+  # p_acs.h
+  DACSThinker: {
+    class: uml-class
+    STAT: "STAT_SCRIPTS (103)"
+    script: "int"
+    activator: "TObjPtr<AActor*>"
+    pc: "int"
+    state: "EScriptState"
+    stackDepth: "int"
+  }
+
+  # p_acs.cpp
+  DPlaneWatcher: {
+    class: uml-class
+    m_Sector: "sector_t*"
+    m_Script: "int"
+    m_Ceiling: "bool"
+  }
+
+  # t_script.h
+  DFraggleThinker: {
+    class: uml-class
+    LevelScript: "TObjPtr<GFxScript*>"
+    RunningScripts: "TArray<GRunningScript*>"
+  }
+}
+
+BotAI: {
+  label: "bots/ -- Bot AI"
+  class: group-container
+
+  # b_bot.h
+  DBot: {
+    class: uml-class
+    STAT: "STAT_BOT (104)"
+    player: "player_t*"
+    dest: "TObjPtr<AActor*>"
+    enemy: "TObjPtr<AActor*>"
+    skill: "botskill_t"
+  }
+}
+
+DecalSystem: {
+  label: "Decal System"
+  class: group-container
+
+  # a_sharedglobal.h
+  DImpactDecal: {
+    class: uml-class
+    "Create() [static]": "DImpactDecal*"
+  }
+
+  # a_sharedglobal.h
+  DBaseDecal: {
+    class: uml-class
+    WallNext: "DBaseDecal*"
+    WallPrev: "DBaseDecal*"
+    LeftDistance: "double"
+    Z: "double"
+    ScaleX: "double"
+    ScaleY: "double"
+    Alpha: "double"
+    RenderFlags: "uint32_t"
+    "Serialize()": "void"
+  }
+
+  # a_decalfx.h
+  DDecalSlider: {
+    class: uml-class
+    STAT: "STAT_DECAL"
+    TimeToStart: "int"
+    TimeToStop: "int"
+    Dist: "double"
+    "Tick()": "void"
+  }
+
+  # a_decalfx.h
+  DDecalFader: {
+    class: uml-class
+    TimeToStartDecay: "int"
+    TimeToEndDecay: "int"
+    StartTrans: "double"
+    "Tick()": "void"
+  }
+
+  # a_decalfx.h
+  DDecalColorer: {
+    class: uml-class
+    TimeToStartDecay: "int"
+    TimeToEndDecay: "int"
+    StartColor: "PalEntry"
+    GoalColor: "PalEntry"
+    "Tick()": "void"
+  }
+
+  # a_decalfx.h
+  DDecalStretcher: {
+    class: uml-class
+    TimeToStart: "int"
+    TimeToStop: "int"
+    GoalX: "double"
+    GoalY: "double"
+    "Tick()": "void"
+  }
+
+  # a_decalfx.h
+  DDecalThinker: "DDecalThinker <<abstract>>" {
+    class: abstract-class
+    STAT: "STAT_DECALTHINKER (36)"
+    TheDecal: "TObjPtr<DBaseDecal*>"
+    "Serialize()": "void"
+  }
+}
+
+Polyobjects: {
+  label: "Polyobjects"
+  class: group-container
+
+  # po_man.cpp
+  DMovePolyTo: {
+    class: uml-class
+    m_Target: "DVector2"
+    "Tick()": "void"
+  }
+
+  # po_man.cpp
+  DMovePoly: {
+    class: uml-class
+    m_Angle: "DAngle"
+    m_Speedv: "DVector2"
+    "Tick()": "void"
+  }
+
+  # po_man.cpp
+  DPolyDoor: {
+    class: uml-class
+    m_Direction: "DAngle"
+    m_TotalDist: "double"
+    m_Tics: "int"
+    m_WaitTics: "int"
+    m_Type: "podoortype_t"
+    m_Close: "bool"
+  }
+
+  # po_man.h
+  DPolyAction: {
+    class: uml-class
+    m_PolyObj: "FPolyObj*"
+    "Serialize()": "void"
+  }
+
+  # po_man.cpp
+  DRotatePoly: {
+    class: uml-class
+    m_Speed: "double"
+    m_Dist: "double"
+  }
+}
+
+ActorSystem: {
+  label: "Actor System"
+  class: group-container
+
+  # actor.h
+  AActor: "AActor <<final>>" {
+    class: uml-class
+    __Pos: "DVector3"
+    Vel: "DVector3"
+    Angles: "DRotator"
+    state: "FState*"
+    tics: "int"
+    flags: "uint32_t"
+    flags2: "uint32_t"
+    flags3: "uint32_t"
+    tid: "int"
+    special: "int"
+    args: "int[5]"
+    target: "TObjPtr<AActor*>"
+    tracer: "TObjPtr<AActor*>"
+    master: "TObjPtr<AActor*>"
+    player: "player_t*"
+    Sector: "sector_t*"
+    floorz: "double"
+    ceilingz: "double"
+    "Tick()": "void"
+    "PostBeginPlay()": "void"
+    "Serialize()": "void"
+    "SetState(FState*)": "void"
+    "Die(...)": "void"
+    "Activate(AActor*)": "void"
+    "Deactivate(AActor*)": "void"
+    "Distance2D(AActor*)": "double"
+    "PosRelative(AActor*)": "DVector3"
+  }
+
+  # p_visualthinker.h
+  DVisualThinker: {
+    class: uml-class
+    STAT: "STAT_VISUALTHINKER (105)"
+    Pos: "DVector3"
+    Vel: "DVector3"
+    Scale: "DVector3"
+    Angles: "DRotator"
+    Alpha: "float"
+    Roll: "float"
+    Translation: "uint32_t"
+    "Tick()": "void"
+    "Serialize()": "void"
+  }
+}
+
+StandaloneThinkers: {
+  label: "Standalone Thinkers"
+  class: group-container
+
+  # a_scroll.h
+  DScroller: {
+    class: uml-class
+    STAT: "STAT_SCROLLER (32)"
+    m_dx: "double"
+    m_dy: "double"
+    m_Type: "EScroll"
+    m_Accel: "int"
+    "Tick()": "void"
+  }
+
+  # a_pusher.h
+  DPusher: {
+    class: uml-class
+    m_Type: "EPusher"
+    m_PushVec: "DVector2"
+    m_Magnitude: "double"
+    m_Radius: "double"
+    m_Source: "TObjPtr<AActor*>"
+    "Tick()": "void"
+  }
+
+  # a_pusher.h
+  DThruster: {
+    class: uml-class
+    m_Sector: "sector_t*"
+    m_Type: "int"
+    "Tick()": "void"
+  }
+
+  # a_lightning.h
+  DLightningThinker: {
+    class: uml-class
+    STAT: "STAT_LIGHTNING (35)"
+    LightningFlashCount: "int"
+    NextLightningFlash: "int"
+    "Tick()": "void"
+    "LightningFlash()": "void"
+  }
+
+  # a_lighttransfer.h
+  DLightTransfer: {
+    class: uml-class
+    STAT: "STAT_LIGHTTRANSFER (39)"
+    Source: "sector_t*"
+    "Tick()": "void"
+  }
+
+  # a_lighttransfer.h
+  DWallLightTransfer: {
+    class: uml-class
+    Source: "sector_t*"
+    TargetID: "int"
+    LastLight: "short"
+    Flags: "uint8_t"
+    "Tick()": "void"
+  }
+
+  # a_sharedglobal.h
+  DFlashFader: {
+    class: uml-class
+    TotalTics: "int"
+    RemainingTics: "int"
+    Blends: "double[2][4]"
+    ForWho: "int"
+    Terminate: "bool"
+    "Tick()": "void"
+  }
+
+  # a_sharedglobal.h
+  DEarthquake: {
+    class: uml-class
+    STAT: "STAT_EARTHQUAKE (40)"
+    m_Spot: "TObjPtr<AActor*>"
+    m_TremorRadius: "double"
+    m_DamageRadius: "double"
+    m_CountDown: "int"
+    "Tick()": "void"
+  }
+
+  # p_switch.cpp
+  DActiveButton: {
+    class: uml-class
+    m_Side: "side_t*"
+    m_Timer: "uint32_t"
+    "Tick()": "void"
+  }
+}
+
+SectorEffects: {
+  label: "Sector Effects (mapthinkers/)"
+  class: group-container
+
+  # dsectoreffect.h
+  DSectorEffect: "DSectorEffect <<abstract>>" {
+    class: abstract-class
+    m_Sector: "sector_t*"
+    "GetSector()": "sector_t*"
+    "Serialize()": "void"
+  }
+
+  # dsectoreffect.h
+  DMover: "DMover <<abstract>>" {
+    class: abstract-class
+    interpolation: "TObjPtr<DInterpolation*>"
+    "StopInterpolation()": "void"
+  }
+
+  # a_floor.h
+  DMovingFloor: "DMovingFloor <<abstract>>" {
+    class: abstract-class
+  }
+
+  # a_ceiling.h
+  DMovingCeiling: "DMovingCeiling <<abstract>>" {
+    class: abstract-class
+  }
+
+  FloorMovers: {
+    label: "Floor Movers"
+    class: sub-container
+
+    # a_floor.h
+    DFloor: {
+      class: uml-class
+      m_Type: "EFloor"
+      m_Crush: "int"
+      m_Direction: "int"
+      m_Speed: "double"
+      m_FloorDestDist: "double"
+      "Tick()": "void"
+    }
+
+    # a_plats.h
+    DPlat: {
+      class: uml-class
+      m_Type: "EPlatType"
+      m_Status: "EPlatState"
+      m_Speed: "double"
+      m_Low: "double"
+      m_High: "double"
+      "Tick()": "void"
+    }
+
+    # a_floor.h
+    DWaggleBase: "DWaggleBase <<abstract>>" {
+      class: abstract-class
+      m_OriginalDist: "double"
+      m_Accumulator: "double"
+      m_Scale: "double"
+      m_ScaleDelta: "double"
+      m_Ticker: "int"
+      m_State: "int"
+      "Tick()": "void"
+    }
+
+    # a_floor.h
+    DFloorWaggle: {
+      class: uml-class
+    }
+
+    # a_floor.h
+    DCeilingWaggle: {
+      class: uml-class
+    }
+
+    # a_floor.h
+    DElevator: {
+      class: uml-class
+      m_Type: "EElevator"
+      m_Direction: "int"
+      m_Speed: "double"
+      "Tick()": "void"
+    }
+
+    # a_pillar.h
+    DPillar: {
+      class: uml-class
+      m_FloorSpeed: "double"
+      m_CeilingSpeed: "double"
+      m_FloorTarget: "double"
+      m_CeilingTarget: "double"
+      m_Crush: "int"
+      "Tick()": "void"
+    }
+  }
+
+  CeilingDoorMovers: {
+    label: "Ceiling / Door Movers"
+    class: sub-container
+
+    # a_ceiling.h
+    DCeiling: {
+      class: uml-class
+      m_Type: "ECeiling"
+      m_Crush: "int"
+      m_Direction: "int"
+      m_Speed: "double"
+      m_Speed2: "double"
+      m_TopHeight: "double"
+      m_BottomHeight: "double"
+      "Tick()": "void"
+    }
+
+    # a_doors.h
+    DDoor: {
+      class: uml-class
+      m_TopDist: "double"
+      m_BotDist: "double"
+      m_BotSpot: "vertex_t*"
+      m_Speed: "double"
+      m_Direction: "int"
+      m_TopWait: "int"
+      m_TopCountdown: "int"
+    }
+
+    # a_doors.h
+    DAnimatedDoor: {
+      class: uml-class
+      m_Line1: "line_t*"
+      m_Line2: "line_t*"
+      m_Status: "int"
+      m_Frame: "int"
+    }
+  }
+
+  Lighting: {
+    label: "Lighting"
+    class: sub-container
+
+    # a_lights.h
+    DLighting: "DLighting <<abstract>>" {
+      class: abstract-class
+      STAT: "STAT_LIGHT (38)"
+    }
+
+    # a_lights.h
+    DFireFlicker: {
+      class: uml-class
+      m_Count: "int"
+      m_MaxLight: "int"
+      m_MinLight: "int"
+    }
+
+    # a_lights.h
+    DFlicker: {
+      class: uml-class
+      m_Count: "int"
+      m_MaxLight: "int"
+      m_MinLight: "int"
+    }
+
+    # a_lights.h
+    DLightFlash: {
+      class: uml-class
+      m_Count: "int"
+      m_MaxTime: "int"
+      m_MinTime: "int"
+      m_MaxLight: "int"
+      m_MinLight: "int"
+    }
+
+    # a_lights.h
+    DStrobe: {
+      class: uml-class
+      m_Count: "int"
+      m_MaxLight: "int"
+      m_MinLight: "int"
+      m_DarkTime: "int"
+      m_BrightTime: "int"
+    }
+
+    # a_lights.h
+    DGlow: {
+      class: uml-class
+      m_MaxLight: "int"
+      m_MinLight: "int"
+      m_Direction: "int"
+    }
+
+    # a_lights.h
+    DGlow2: {
+      class: uml-class
+      m_Start: "int"
+      m_End: "int"
+      m_MaxTics: "int"
+      m_Tics: "int"
+      m_OneShot: "bool"
+    }
+
+    # a_lights.h
+    DPhased: {
+      class: uml-class
+      m_BaseLevel: "uint8_t"
+      m_Phase: "uint8_t"
+    }
+  }
+}
+
+External: {
+  label: "External Reference"
+  class: group-container
+
+  # r_defs.h
+  sector_t: "sector_t <<external>>" {
+    class: external-class
+    floorheight: "double"
+    ceilingheight: "double"
+    lightlevel: "int"
+  }
+}
+
+# ---- Inheritance: direct DThinker subclasses ----
+Scripting.DACSThinker -> DThinker: extends { class: extends-edge }
+Scripting.DPlaneWatcher -> DThinker: extends { class: extends-edge }
+Scripting.DFraggleThinker -> DThinker: extends { class: extends-edge }
+BotAI.DBot -> DThinker: extends { class: extends-edge }
+ActorSystem.AActor -> DThinker: extends { class: extends-edge }
+ActorSystem.DVisualThinker -> DThinker: extends { class: extends-edge }
+DecalSystem.DDecalThinker -> DThinker: extends { class: extends-edge }
+SectorEffects.DSectorEffect -> DThinker: extends { class: extends-edge }
+StandaloneThinkers.DScroller -> DThinker: extends { class: extends-edge }
+StandaloneThinkers.DPusher -> DThinker: extends { class: extends-edge }
+StandaloneThinkers.DThruster -> DThinker: extends { class: extends-edge }
+StandaloneThinkers.DLightningThinker -> DThinker: extends { class: extends-edge }
+StandaloneThinkers.DLightTransfer -> DThinker: extends { class: extends-edge }
+StandaloneThinkers.DWallLightTransfer -> DThinker: extends { class: extends-edge }
+StandaloneThinkers.DFlashFader -> DThinker: extends { class: extends-edge }
+StandaloneThinkers.DEarthquake -> DThinker: extends { class: extends-edge }
+StandaloneThinkers.DActiveButton -> DThinker: extends { class: extends-edge }
+
+# ---- Inheritance: Decal System ----
+DecalSystem.DDecalSlider -> DecalSystem.DDecalThinker: extends { class: extends-edge }
+DecalSystem.DDecalFader -> DecalSystem.DDecalThinker: extends { class: extends-edge }
+DecalSystem.DDecalColorer -> DecalSystem.DDecalThinker: extends { class: extends-edge }
+DecalSystem.DDecalStretcher -> DecalSystem.DDecalThinker: extends { class: extends-edge }
+DecalSystem.DImpactDecal -> DecalSystem.DBaseDecal: extends { class: extends-edge }
+
+# ---- Inheritance: Polyobjects ----
+Polyobjects.DMovePoly -> Polyobjects.DPolyAction: extends { class: extends-edge }
+Polyobjects.DMovePolyTo -> Polyobjects.DMovePoly: extends { class: extends-edge }
+Polyobjects.DPolyDoor -> Polyobjects.DMovePoly: extends { class: extends-edge }
+Polyobjects.DRotatePoly -> Polyobjects.DPolyAction: extends { class: extends-edge }
+
+# ---- Inheritance: Sector Effects core ----
+SectorEffects.DMover -> SectorEffects.DSectorEffect: extends { class: extends-edge }
+SectorEffects.DMovingFloor -> SectorEffects.DMover: extends { class: extends-edge }
+SectorEffects.DMovingCeiling -> SectorEffects.DMover: extends { class: extends-edge }
+
+# ---- Inheritance: Floor Movers ----
+SectorEffects.FloorMovers.DFloor -> SectorEffects.DMovingFloor: extends { class: extends-edge }
+SectorEffects.FloorMovers.DPlat -> SectorEffects.DMovingFloor: extends { class: extends-edge }
+SectorEffects.FloorMovers.DWaggleBase -> SectorEffects.DMover: extends { class: extends-edge }
+SectorEffects.FloorMovers.DFloorWaggle -> SectorEffects.FloorMovers.DWaggleBase: extends { class: extends-edge }
+SectorEffects.FloorMovers.DCeilingWaggle -> SectorEffects.FloorMovers.DWaggleBase: extends { class: extends-edge }
+SectorEffects.FloorMovers.DElevator -> SectorEffects.DMover: extends { class: extends-edge }
+SectorEffects.FloorMovers.DPillar -> SectorEffects.DMover: extends { class: extends-edge }
+
+# ---- Inheritance: Ceiling / Door Movers ----
+SectorEffects.CeilingDoorMovers.DCeiling -> SectorEffects.DMovingCeiling: extends { class: extends-edge }
+SectorEffects.CeilingDoorMovers.DDoor -> SectorEffects.DMovingCeiling: extends { class: extends-edge }
+SectorEffects.CeilingDoorMovers.DAnimatedDoor -> SectorEffects.DMovingCeiling: extends { class: extends-edge }
+
+# ---- Inheritance: Lighting ----
+SectorEffects.Lighting.DLighting -> SectorEffects.DSectorEffect: extends { class: extends-edge }
+SectorEffects.Lighting.DFireFlicker -> SectorEffects.Lighting.DLighting: extends { class: extends-edge }
+SectorEffects.Lighting.DFlicker -> SectorEffects.Lighting.DLighting: extends { class: extends-edge }
+SectorEffects.Lighting.DLightFlash -> SectorEffects.Lighting.DLighting: extends { class: extends-edge }
+SectorEffects.Lighting.DStrobe -> SectorEffects.Lighting.DLighting: extends { class: extends-edge }
+SectorEffects.Lighting.DGlow -> SectorEffects.Lighting.DLighting: extends { class: extends-edge }
+SectorEffects.Lighting.DGlow2 -> SectorEffects.Lighting.DLighting: extends { class: extends-edge }
+SectorEffects.Lighting.DPhased -> SectorEffects.Lighting.DLighting: extends { class: extends-edge }
+
+# ---- Composition / association ----
+SectorEffects.DSectorEffect -> External.sector_t: "m_Sector 1" { class: assoc-edge }
+DecalSystem.DDecalThinker -> DecalSystem.DBaseDecal: "TheDecal *" { class: assoc-edge }
+Scripting.DACSThinker -> ActorSystem.AActor: "activator" { class: assoc-edge }
+BotAI.DBot -> ActorSystem.AActor: "dest / enemy" { class: assoc-edge }
+StandaloneThinkers.DPusher -> ActorSystem.AActor: "m_Source" { class: assoc-edge }
+StandaloneThinkers.DEarthquake -> ActorSystem.AActor: "m_Spot" { class: assoc-edge }

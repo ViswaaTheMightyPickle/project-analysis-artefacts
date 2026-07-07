@@ -1,0 +1,237 @@
+# Map Geometry Data Structures
+# Playsim map data classes: FLevelLocals, polyobjects, sidedefs, linedefs,
+# vertices, sectors, 3D floors and their supporting types.
+
+direction: right
+
+classes: {
+  table: {
+    shape: sql_table
+    style.fill: "#152238"
+    style.stroke: "#0a1526"
+    style.font-color: "#f5f7fa"
+    style.border-radius: 4
+  }
+}
+
+FLevelLocals: {
+  class: table
+  label: "FLevelLocals «context» (p_local.h)"
+  note: "owns all map arrays at level scope"
+}
+
+FPolyObj: {
+  class: table
+  label: "FPolyObj (po_man.h)"
+  Sidedefs: "TArray<side_t*>"
+  Linedefs: "TArray<line_t*>"
+  Vertices: "TArray<vertex_t*>"
+  StartSpot: "FPolyVertex"
+  CenterSpot: "FPolyVertex"
+  Angle: "DAngle"
+  tag: "int"
+  crush: "int"
+  bHurtOnTouch: "bool"
+  specialdata: "TObjPtr<DPolyAction*>"
+  Level: "FLevelLocals*"
+}
+
+FPolySeg: {
+  class: table
+  label: "FPolySeg (po_man.h)"
+  v1: "FPolyVertex"
+  v2: "FPolyVertex"
+  wall: "side_t*"
+}
+
+DPolyAction: {
+  class: table
+  label: "DPolyAction «external» (po_man.h)"
+  note: "string"
+}
+
+side_t: {
+  class: table
+  label: "side_t «external» (r_defs.h)"
+  sector: "sector_t*"
+  linedef: "line_t*"
+  textures: "side_t::part[3]"
+  AttachedDecals: "DBaseDecal*"
+  Light: "int16_t"
+  Flags: "uint16_t"
+  sidenum: "int"
+}
+
+side_t_part: {
+  class: table
+  label: "side_t::part (r_defs.h)"
+  texture: "FTextureID"
+  xOffset: "double"
+  yOffset: "double"
+  xScale: "double"
+  yScale: "double"
+}
+
+DBaseDecal: {
+  class: table
+  label: "DBaseDecal «external» (a_sharedglobal.h)"
+  note: "string"
+}
+
+extsector_t: {
+  class: table
+  label: "extsector_t «external» (r_defs.h)"
+  "XFloor.ffloors": "TDeletingArray<F3DFloor*>"
+  "XFloor.lightlist": "TArray<lightlist_t>"
+  "XFloor.attached": "TArray<sector_t*>"
+  "Midtex.Floor.AttachedLines": "TArray<line_t*>"
+  "FakeFloor.Sectors": "TArray<sector_t*>"
+}
+
+F3DFloor: {
+  class: table
+  label: "F3DFloor (p_3dfloors.h)"
+  "top": "F3DFloor::planeref"
+  "bottom": "F3DFloor::planeref"
+  master: "line_t*"
+  model: "sector_t*"
+  target: "sector_t*"
+  flags: "unsigned int"
+  alpha: "int"
+  toplightlevel: "short*"
+}
+
+F3DFloor_planeref: {
+  class: table
+  label: "F3DFloor::planeref (p_3dfloors.h)"
+  plane: "secplane_t*"
+  texture: "FTextureID*"
+  model: "sector_t*"
+  isceiling: "int"
+}
+
+linebase_t: {
+  class: table
+  label: "linebase_t «abstract» (r_defs.h)"
+  v1: "vertex_t*"
+  v2: "vertex_t*"
+  delta: "DVector2"
+}
+
+line_t: {
+  class: table
+  label: "line_t «external» (r_defs.h)"
+  flags: "uint32_t"
+  flags2: "uint32_t"
+  activation: "uint32_t"
+  special: "int"
+  args: "int[5]"
+  alpha: "double"
+  sidedef: "side_t*[2]"
+  frontsector: "sector_t*"
+  backsector: "sector_t*"
+  locknumber: "int"
+  linenum: "int"
+}
+
+vertex_t: {
+  class: table
+  label: "vertex_t (r_defs.h)"
+  p: "DVector2"
+  vertexnum: "int"
+  sectors: "sector_t**"
+  numsectors: "int"
+}
+
+sector_t: {
+  class: table
+  label: "sector_t (r_defs.h)"
+  floorplane: "secplane_t"
+  ceilingplane: "secplane_t"
+  Lines: "TStaticPointedArray<line_t*>"
+  lightlevel: "short"
+  special: "int"
+  Flags: "uint32_t"
+  gravity: "double"
+  friction: "double"
+  damageamount: "int"
+  damagetype: "int"
+  sectornum: "int"
+  floordata: "TObjPtr<DSectorEffect*>"
+  ceilingdata: "TObjPtr<DSectorEffect*>"
+  lightingdata: "TObjPtr<DSectorEffect*>"
+  thinglist: "AActor*"
+  SoundTarget: "TObjPtr<AActor*>"
+  touching_thinglist: "msecnode_t*"
+  e: "extsector_t*"
+  heightsec: "sector_t*"
+  Level: "FLevelLocals*"
+}
+
+DSectorEffect: {
+  class: table
+  label: "DSectorEffect «external» (dsectoreffect.h)"
+  note: "string"
+}
+
+msecnode_t: {
+  class: table
+  label: "msecnode_t (r_defs.h)"
+  m_sector: "sector_t*"
+  m_thing: "AActor*"
+  m_tprev: "msecnode_t*"
+  m_tnext: "msecnode_t*"
+  m_sprev: "msecnode_t*"
+  m_snext: "msecnode_t*"
+}
+
+AActor: {
+  class: table
+  label: "AActor «external» (actor.h)"
+  note: "string"
+}
+
+# Ownership and association relationships
+
+FLevelLocals -> FPolyObj: "polyobject array owns 0..*"
+FLevelLocals -> side_t: "side array owns 0..*"
+FLevelLocals -> vertex_t: "vertex array owns 0..*"
+FLevelLocals -> line_t: "line array owns 0..*"
+FLevelLocals -> sector_t: "sector array owns 0..*"
+
+FPolyObj -> side_t: "Sidedefs 0..*"
+FPolyObj -> line_t: "Linedefs 0..*"
+FPolyObj -> vertex_t: "Vertices 0..*"
+FPolyObj -> DPolyAction: "specialdata 0..1"
+
+FPolySeg -> side_t: "wall 1"
+
+side_t -> sector_t: "sector 1"
+side_t -> line_t: "linedef 1"
+side_t -> DBaseDecal: "AttachedDecals 0..*"
+side_t -> side_t_part: "textures[3] top/mid/bottom"
+
+extsector_t -> F3DFloor: "XFloor.ffloors 0..*"
+
+F3DFloor -> sector_t: "model / target"
+F3DFloor -> line_t: "master 1"
+F3DFloor -> F3DFloor_planeref: "top / bottom"
+
+F3DFloor_planeref -> sector_t: "model 1"
+
+line_t -> linebase_t: "extends" {
+  style.stroke-dash: 3
+  target-arrowhead.shape: triangle
+  target-arrowhead.style.filled: false
+}
+line_t -> vertex_t: "v1 / v2"
+line_t -> sector_t: "frontsector / backsector"
+
+sector_t -> extsector_t: "e 1"
+sector_t -> DSectorEffect: "floordata / ceilingdata / lightingdata 0..1"
+sector_t -> msecnode_t: "touching_thinglist"
+
+msecnode_t -> sector_t: "m_sector 1"
+msecnode_t -> AActor: "m_thing 1"
+
+vertex_t -> sector_t: "sectors 0..*"

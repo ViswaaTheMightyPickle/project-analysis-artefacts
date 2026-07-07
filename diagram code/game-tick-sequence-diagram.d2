@@ -1,0 +1,93 @@
+shape: sequence_diagram
+
+title: {
+  label: Game Tick Sequence
+  near: top-center
+  shape: text
+  style.font-size: 24
+  style.bold: true
+  style.font-color: "#1a2f4b"
+}
+
+RunThinkers: {
+  style.fill: "#dbe8fb"
+  style.stroke: "#1a3a6b"
+  style.font-color: "#1a2f4b"
+}
+TickThinkers: {
+  style.fill: "#dbe8fb"
+  style.stroke: "#1a3a6b"
+  style.font-color: "#1a2f4b"
+}
+Thinker: {
+  style.fill: "#dbe8fb"
+  style.stroke: "#1a3a6b"
+  style.font-color: "#1a2f4b"
+}
+FreshThinkers: {
+  style.fill: "#dbe8fb"
+  style.stroke: "#1a3a6b"
+  style.font-color: "#1a2f4b"
+}
+recreateLights: {
+  style.fill: "#dbe8fb"
+  style.stroke: "#1a3a6b"
+  style.font-color: "#1a2f4b"
+}
+DynLights: {
+  style.fill: "#dbe8fb"
+  style.stroke: "#1a3a6b"
+  style.font-color: "#1a2f4b"
+}
+
+RunThinkers -> TickThinkers: "Pass 1 -- for i in [STAT_FIRST_THINKING..MAX_STATNUM]: Thinkers[i].TickThinkers(null)" {
+  style.stroke: "#1a3a6b"
+}
+TickThinkers -> Thinker: "CallTick() on each non-EuthanizeMe thinker" {
+  style.stroke: "#1a3a6b"
+}
+Thinker -> TickThinkers: "(return)" {
+  style.stroke: "#1a3a6b"
+}
+RunThinkers -> RunThinkers: "count = 0" {
+  style.stroke: "#1a3a6b"
+}
+RunThinkers -> TickThinkers: "Pass 2 (drain) -- FreshThinkers[i].TickThinkers(&Thinkers[i])" {
+  style.stroke: "#1a3a6b"
+}
+TickThinkers -> FreshThinkers: "OF_JustSpawned set: node.Remove() from FreshThinkers; dest.AddTail(node) -> move to Thinkers[i]; CallPostBeginPlay()" {
+  style.stroke: "#1a3a6b"
+}
+TickThinkers -> FreshThinkers: "CallTick() on each" {
+  style.stroke: "#1a3a6b"
+}
+FreshThinkers -> TickThinkers: "(return)" {
+  style.stroke: "#1a3a6b"
+}
+TickThinkers -> RunThinkers: "return count (num ticked)" {
+  style.stroke: "#1a3a6b"
+}
+RunThinkers -> RunThinkers: "while (count != 0): repeat Pass 2" {
+  style.stroke: "#1a3a6b"
+}
+RunThinkers -> recreateLights: "recreateLights() -- local lambda inside RunThinkers; iterates all AActor thinkers" {
+  style.stroke: "#1a3a6b"
+}
+recreateLights -> recreateLights: "MF8_RECREATELIGHTS set and dolights -> ac.SetDynamicLights()" {
+  style.stroke: "#1a3a6b"
+}
+recreateLights -> recreateLights: "(ac.effects || ac.fountaincolor) && ac.ShouldRenderLocally() && !Level->isFrozen() -> P_RunEffect(ac, ac.effects)" {
+  style.stroke: "#1a3a6b"
+}
+recreateLights -> RunThinkers: "(return)" {
+  style.stroke: "#1a3a6b"
+}
+RunThinkers -> DynLights: "if (dolights): for each light in Level->lights" {
+  style.stroke: "#1a3a6b"
+}
+DynLights -> DynLights: "light.Tick()" {
+  style.stroke: "#1a3a6b"
+}
+DynLights -> RunThinkers: "(return)" {
+  style.stroke: "#1a3a6b"
+}
